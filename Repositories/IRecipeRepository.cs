@@ -3,5 +3,7 @@ using feastly_api.Models;
 namespace feastly_api.Repositories;
 
 public interface IRecipeRepository {
-    IEnumerable<Recipe> GetAllRecipes();
+    Task<IEnumerable<Recipe>> GetAllRecipes();
+
+    Task<Recipe> CreateRecipe(Recipe newRecipe);
 }

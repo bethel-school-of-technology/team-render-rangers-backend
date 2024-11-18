@@ -6,7 +6,8 @@ namespace feastly_api.Repositories
     public class SQLRecipeRpo(IConfiguration configuration) : IRecipeRepository
     {
         private readonly string? _myConnectionString = configuration.GetConnectionString("DefaultConnection");
-        public IEnumerable<Recipe> GetAllRecipes()
+
+        public async Task<IEnumerable<Recipe>> GetAllRecipes()
         {
             var recipeList = new List<Recipe>();
 
@@ -33,7 +34,12 @@ namespace feastly_api.Repositories
                     }
                 }
             }
-            return recipeList;
+            return await Task.FromResult(recipeList);
+        }
+
+        public Task<Recipe> CreateRecipe(Recipe newRecipe)
+        {
+            throw new NotImplementedException();
         }
     }
 }
