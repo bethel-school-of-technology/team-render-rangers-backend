@@ -6,7 +6,7 @@ namespace feastly_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class RecipeController : Controller
+    public class RecipeController : ControllerBase
     {
         private readonly ILogger<RecipeController> _logger;
         private readonly IRecipeRepository _recipeRepository;
@@ -18,12 +18,15 @@ namespace feastly_api.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Recipe>> GetAllRecipes()
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetAllRecipes()
         {
-            return Ok(_recipeRepository.GetAllRecipes());
+            var recipes = await _recipeRepository.GetAllRecipes();
+            return Ok(recipes);
         }
 
+
         [HttpPost]
+
         public async Task<ActionResult<Recipe>> CreateRecipe([FromBody] Recipe newRecipe)
         {
             if (!ModelState.IsValid || newRecipe == null)
