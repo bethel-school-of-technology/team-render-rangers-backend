@@ -25,8 +25,8 @@ namespace feastly_api.Repositories
                         recipeList.Add(new Recipe
                         {
                             RecipeId = reader.GetInt32("recipeId"),
-                            RecipeName = reader.GetString("recipeName"),
                             RecipeCategory = reader.GetString("recipeCategory"),
+                            RecipeName = reader.GetString("recipeName"),
                             RecipeIngredients = reader.GetString("recipeIngredients"),
                             RecipeInstructions = reader.GetString("recipeInstructions"),
                             RecipeImgUrl = reader.GetString("recipeImgUrl"),
@@ -37,9 +37,26 @@ namespace feastly_api.Repositories
             return await Task.FromResult(recipeList);
         }
 
-        public Task<Recipe> CreateRecipe(Recipe newRecipe)
+        public async Task<Recipe> CreateRecipe(Recipe newRecipe)
         {
-            throw new NotImplementedException();
+            using (var conn = new MySqlConnection(_myConnectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "INSERT INTO recipe (recipeCategory, recipeName, recipeIngredients, recipeInstructions, recipeImgUrl) VALUES(@recipeCategory, @recipeName, @recipeIngredients, @recipeInstructions, @recipeImgUrl);";
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@recipeCategory", newRecipe.RecipeCategory);
+                    command.Parameters.AddWithValue("@recipeName", newRecipe.RecipeName);
+                    command.Parameters.AddWithValue("@recipeIngredients", newRecipe.RecipeIngredients);
+                    command.Parameters.AddWithValue("@recipeInstructions", newRecipe.RecipeInstructions);
+                    command.Parameters.AddWithValue("@recipeImgUrl", newRecipe.RecipeImgUrl);
+
+                    await command.ExecuteNonQueryAsync();
+                    newRecipe.RecipeId = (int)command.LastInsertedId;
+                }
+                return newRecipe;
+           }
         }
     }
 }
