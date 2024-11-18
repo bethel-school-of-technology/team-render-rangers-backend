@@ -22,5 +22,17 @@ namespace feastly_api.Controllers
         {
             return Ok(_recipeRepository.GetAllRecipes());
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Recipe>> CreateRecipe([FromBody] Recipe newRecipe)
+        {
+            if (!ModelState.IsValid || newRecipe == null)
+            {
+                return BadRequest();
+            }
+
+            var createdRecipe = await _recipeRepository.CreateRecipe(newRecipe);
+            return CreatedAtAction(nameof(GetAllRecipes), new { recipeId = createdRecipe.RecipeId }, createdRecipe);
+        }
     }
 }
