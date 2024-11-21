@@ -7,5 +7,5 @@ public interface IRecipeRepository {
 
     Task<Recipe> CreateRecipe(Recipe newRecipe);
 
-    Task<Recipe> DeleteRecipe(int recipeId);
+    Task DeleteRecipe(int recipeId);
 }
