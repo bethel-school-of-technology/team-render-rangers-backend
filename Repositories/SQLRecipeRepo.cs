@@ -1,5 +1,6 @@
 using MySql.Data.MySqlClient;
 using feastly_api.Models;
+using System.Data;
 
 namespace feastly_api.Repositories
 {
@@ -37,6 +38,37 @@ namespace feastly_api.Repositories
             return await Task.FromResult(recipeList);
         }
 
+        public async Task<Recipe?> GetRecipe(int recipeId)
+        {
+            using (var conn = new MySqlConnection(_myConnectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "SELECT * FROM recipe WHERE recipeId = @recipeId;";
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@recipeId", recipeId);
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        if (await reader.ReadAsync())
+                        {
+                            return new Recipe
+                            {
+                                RecipeId = reader.GetInt32("recipeId"),
+                                RecipeCategory = reader.GetString("recipeCategory"),
+                                RecipeName = reader.GetString("recipeName"),
+                                RecipeIngredients = reader.GetString("recipeIngredients"),
+                                RecipeInstructions = reader.GetString("recipeInstructions"),
+                                RecipeImgUrl = reader.GetString("recipeImgUrl")
+                            };
+                        }
+                    }
+
+                }
+            }
+            return null;
+        }
+
         public async Task<Recipe> CreateRecipe(Recipe newRecipe)
         {
             using (var conn = new MySqlConnection(_myConnectionString))
@@ -56,7 +88,7 @@ namespace feastly_api.Repositories
                     newRecipe.RecipeId = (int)command.LastInsertedId;
                 }
                 return newRecipe;
-           }
+            }
         }
 
         public async Task DeleteRecipe(int recipeId)
