@@ -58,5 +58,21 @@ namespace feastly_api.Repositories
                 return newRecipe;
            }
         }
+
+        public async Task DeleteRecipe(int recipeId)
+        {
+            using (var conn = new MySqlConnection(_myConnectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "DELETE FROM recipe WHERE recipeId = @recipeId;";
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@recipeId", recipeId);
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
     }
 }
