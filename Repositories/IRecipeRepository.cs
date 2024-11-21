@@ -6,4 +6,6 @@ public interface IRecipeRepository {
     Task<IEnumerable<Recipe>> GetAllRecipes();
 
     Task<Recipe> CreateRecipe(Recipe newRecipe);
+
+    Task<Recipe> DeleteRecipe(int recipeId);
 }
