@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using feastly_api.Repositories;
 using feastly_api.Models;
+// using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace feastly_api.Controllers
 {
@@ -24,9 +25,20 @@ namespace feastly_api.Controllers
             return Ok(recipes);
         }
 
+        [HttpGet("{recipeId:int}")]
+        public async Task<ActionResult<Recipe?>> GetRecipe(int recipeId)
+        {
+            var recipe = await _recipeRepository.GetRecipe(recipeId);
+
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(recipe);
+        }
 
         [HttpPost]
-
         public async Task<ActionResult<Recipe>> CreateRecipe([FromBody] Recipe newRecipe)
         {
             if (!ModelState.IsValid || newRecipe == null)
@@ -37,5 +49,19 @@ namespace feastly_api.Controllers
             var createdRecipe = await _recipeRepository.CreateRecipe(newRecipe);
             return CreatedAtAction(nameof(GetAllRecipes), new { recipeId = createdRecipe.RecipeId }, createdRecipe);
         }
+
+        // [HttpDelete]
+        // [Route("recipeId:int")]
+        // public async Task DeleteRecipe(int recipeId);
+        // {
+        //     var existingRecipe = await _recipeRepository.GetRecipe(recipeId);
+        //     if (existingRecipe == null)
+        //     {
+        //         return NotFound();
+        //     }
+        //     _recipeRepository.DeleteRecipe(recipeId);
+        //     return NoContent();
+
+        // }
     }
 }
