@@ -48,5 +48,17 @@ namespace feastly_api.Controllers
             var createdRecipe = await _recipeRepository.CreateRecipe(newRecipe);
             return CreatedAtAction(nameof(GetAllRecipes), new { recipeId = createdRecipe.RecipeId }, createdRecipe);
         }
+
+        [HttpDelete ("{recipeId:int}")]
+        public async Task<IActionResult> DeleteRecipe(int recipeId)
+        {
+            var existingRecipe = await _recipeRepository.GetRecipe(recipeId);
+            if (existingRecipe == null)
+            {
+                return NotFound();
+            }
+            await _recipeRepository.DeleteRecipe(recipeId);
+            return NoContent();
+        }
     }
 }
