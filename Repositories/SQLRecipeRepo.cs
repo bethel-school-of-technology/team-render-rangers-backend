@@ -91,6 +91,29 @@ namespace feastly_api.Repositories
             }
         }
 
+        public async Task<Recipe> UpdateRecipe(Recipe updatedRecipe)
+        {
+            using (var conn = new MySqlConnection(_myConnectionString))
+            {
+                await conn.OpenAsync();
+
+                string query = "UPDATE recipe SET recipeCategory = @recipeCategory, recipeName = @recipeName, recipeIngredients = @recipeIngredients, recipeInstructions = @recipeInstructions, recipeImgUrl = @recipeImgUrl WHERE recipeId = @recipeId;";
+                using (var command = new MySqlCommand(query, conn))
+                {
+                    command.Parameters.AddWithValue("@recipeId", updatedRecipe.RecipeId);
+                    command.Parameters.AddWithValue("@recipeCategory", updatedRecipe.RecipeCategory);
+                    command.Parameters.AddWithValue("@recipeName", updatedRecipe.RecipeName);
+                    command.Parameters.AddWithValue("@recipeIngredients", updatedRecipe.RecipeIngredients);
+                    command.Parameters.AddWithValue("@recipeInstructions", updatedRecipe.RecipeInstructions);
+                    command.Parameters.AddWithValue("@recipeImgUrl", updatedRecipe.RecipeImgUrl);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+
+                return updatedRecipe;
+            }
+        }
+
         public async Task DeleteRecipe(int recipeId)
         {
             using (var conn = new MySqlConnection(_myConnectionString))
@@ -105,6 +128,5 @@ namespace feastly_api.Repositories
                 }
             }
         }
-
     }
 }
