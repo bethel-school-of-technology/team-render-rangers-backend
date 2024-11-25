@@ -14,7 +14,7 @@ namespace feastly_api.Repositories
 
             using (var conn = new MySqlConnection(_myConnectionString))
             {
-                conn.Open();
+                await conn.OpenAsync();
 
                 string query = "SELECT * FROM recipe;";
                 using (var command = new MySqlCommand(query, conn))
