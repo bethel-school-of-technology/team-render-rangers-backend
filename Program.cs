@@ -1,5 +1,7 @@
 using Microsoft.OpenApi.Models;
 using feastly_api.Repositories;
+using Microsoft.EntityFrameworkCore;
+using feastly_api.Migrations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +14,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IRecipeRepository, SQLRecipeRpo>();
+builder.Services.AddScoped<IRecipeRepository, SQLRecipeRepo>();
+builder.Services.AddDbContext<RecipeDbContext>(options =>
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 2))));
 
 var app = builder.Build();
 
