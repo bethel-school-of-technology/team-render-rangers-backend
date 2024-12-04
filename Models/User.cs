@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace feastly_api;
+namespace feastly_api.Models;
 
-public class User 
+public class User
 {
     [JsonIgnore]
     public int UserId { get; set; }
@@ -16,6 +16,4 @@ public class User
 
     [Required]
     public required string Password { get; set; }
-
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }
