@@ -4,7 +4,7 @@ using System.Data;
 
 namespace feastly_api.Repositories
 {
-    public class SQLRecipeRpo(IConfiguration configuration) : IRecipeRepository
+    public class SQLRecipeRepo(IConfiguration configuration) : IRecipeRepository
     {
         private readonly string? _myConnectionString = configuration.GetConnectionString("DefaultConnection");
 
