@@ -14,6 +14,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IRecipeRepository, SQLRecipeRepo>();
 builder.Services.AddDbContext<RecipeDbContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 2))));
