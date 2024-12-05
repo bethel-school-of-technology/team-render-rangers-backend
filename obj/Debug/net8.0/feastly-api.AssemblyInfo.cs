@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("feastly-api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f8979a64d94d8803ff95896dda8d9757bcc3cecf")]
 [assembly: System.Reflection.AssemblyProductAttribute("feastly-api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("feastly-api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
