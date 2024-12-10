@@ -1,13 +1,44 @@
-using Microsoft.OpenApi.Models;
+using feastly_api.Migrations;
 using feastly_api.Repositories;
 using Microsoft.EntityFrameworkCore;
-using feastly_api.Migrations;
+
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var secretKey = builder.Configuration["TokenSecret"];
+
+if (string.IsNullOrEmpty(secretKey))
+{
+    throw new InvalidOperationException("TokenSecret configuration is missing.");
+}
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = true;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+        ValidateAudience = false,
+        ValidateIssuer = false,
+        ValidateLifetime = false,
+        RequireExpirationTime = false,
+        ClockSkew = TimeSpan.Zero,
+        ValidateIssuerSigningKey = true
+    };
+});
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
