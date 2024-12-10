@@ -1,10 +1,11 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using feastly_api.Migrations;
 using feastly_api.Models;
-using Microsoft.IdentityModel.Tokens;
+using feastly_api.Migrations;
+
+using System.Text;
+using System.Security.Claims;
 using bcrypt = BCrypt.Net.BCrypt;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace feastly_api.Repositories;
 
