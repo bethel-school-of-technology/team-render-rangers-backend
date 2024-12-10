@@ -1,5 +1,5 @@
-using feastly_api.Migrations;
 using feastly_api.Models;
+using feastly_api.Migrations;
 using Microsoft.EntityFrameworkCore;
 
 namespace feastly_api.Repositories;
