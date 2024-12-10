@@ -1,6 +1,7 @@
+using feastly_api.Models;
 using feastly_api.Repositories;
 using Microsoft.AspNetCore.Mvc;
-using feastly_api.Models;
+
 
 namespace feastly_api.Controllers;
 
