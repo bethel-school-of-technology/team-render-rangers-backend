@@ -51,6 +51,40 @@ namespace feastly_api.Controllers
         }
 
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("user/{recipeId:int}")]
+        public async Task<ActionResult<Recipe?>> GetOneUserRecipe(int recipeId)
+        {
+            var userId = GetUserIdFromToken();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var recipe = await _recipeRepository.GetOneUserRecipe(userId.Value, recipeId);
+            if (recipe == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(recipe);
+        }
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("user")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetAllUserRecipes()
+        {
+            var userId = GetUserIdFromToken();
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+
+            var recipes = await _recipeRepository.GetAllUserRecipes(userId.Value);
+            return Ok(recipes);
+        }
+
+
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<ActionResult<Recipe>> CreateRecipe([FromBody] Recipe newRecipe)
         {
@@ -66,8 +100,8 @@ namespace feastly_api.Controllers
             }
 
             newRecipe.UserId = userId.Value;
-
             var createdRecipe = await _recipeRepository.CreateRecipe(newRecipe);
+
             return CreatedAtAction(nameof(GetAllRecipes), new { recipeId = createdRecipe.RecipeId }, createdRecipe);
         }
 
@@ -89,9 +123,14 @@ namespace feastly_api.Controllers
 
             updatedRecipe.UserId = userId.Value;
 
-            var recipeUpdate = await _recipeRepository.UpdateRecipe(updatedRecipe);
+            var recipeUpdate = await _recipeRepository.UpdateRecipe(userId.Value, updatedRecipe);
             if (recipeUpdate == null)
             {
+                var recipeExists = await _recipeRepository.GetRecipe(recipeId);
+                if (recipeExists != null)
+                {
+                    return Forbid();
+                }
                 return NotFound();
             }
             return Ok(recipeUpdate);
@@ -107,8 +146,10 @@ namespace feastly_api.Controllers
                 return Unauthorized();
             }
 
+            // TODO: revisit these validations
+
             var existingRecipe = await _recipeRepository.GetRecipe(recipeId);
-          
+
             if (existingRecipe == null)
             {
                 return NotFound();
@@ -118,8 +159,8 @@ namespace feastly_api.Controllers
             {
                 return Forbid();
             }
-            
-            await _recipeRepository.DeleteRecipe(recipeId);
+
+            await _recipeRepository.DeleteRecipe(userId.Value, recipeId);
             return NoContent();
         }
     }
