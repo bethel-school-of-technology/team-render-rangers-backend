@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
         ValidateAudience = false,
         ValidateIssuer = false,
-        ValidateLifetime = false,
+        ValidateLifetime = false, // for testing purposes
         RequireExpirationTime = false,
         ClockSkew = TimeSpan.Zero,
         ValidateIssuerSigningKey = true
@@ -67,6 +67,8 @@ app.UseCors(builder => builder
 app.UseHttpsRedirection();
 
 app.UseRouting();
+
+app.UseAuthentication(); 
 
 app.UseAuthorization();
 
