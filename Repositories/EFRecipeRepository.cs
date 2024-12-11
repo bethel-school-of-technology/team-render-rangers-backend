@@ -13,22 +13,6 @@ public class EFRecipeRepository : IRecipeRepository
         _context = context;
     }
 
-    public async Task<Recipe> CreateRecipe(Recipe newRecipe)
-    {
-        await _context.Recipes.AddAsync(newRecipe);
-        await _context.SaveChangesAsync();
-        return newRecipe;
-    }
-
-    public async Task DeleteRecipe(int recipeId)
-    {
-        var recipe = await _context.Recipes.FindAsync(recipeId);
-        if (recipe != null)
-        {
-            _context.Recipes.Remove(recipe);
-            await _context.SaveChangesAsync();
-        }
-    }
 
     public async Task<IEnumerable<Recipe>> GetAllRecipes()
     {
@@ -40,9 +24,26 @@ public class EFRecipeRepository : IRecipeRepository
         return await _context.Recipes.SingleOrDefaultAsync(c => c.RecipeId == recipeId);
     }
 
-    public async Task<Recipe?> UpdateRecipe(Recipe updatedRecipe)
+    public async Task<Recipe?> GetOneUserRecipe(int userId, int recipeId)
     {
-        var originalRecipe = await _context.Recipes.FindAsync(updatedRecipe.RecipeId);
+        return await _context.Recipes.SingleOrDefaultAsync(r => r.RecipeId == recipeId && r.UserId == userId);
+    }
+
+    public async Task<IEnumerable<Recipe>> GetAllUserRecipes(int userId)
+    {
+        return await _context.Recipes.Where(r => r.UserId == userId).ToListAsync();
+    }
+
+    public async Task<Recipe> CreateRecipe(Recipe newRecipe)
+    {
+        await _context.Recipes.AddAsync(newRecipe);
+        await _context.SaveChangesAsync();
+        return newRecipe;
+    }
+
+    public async Task<Recipe?> UpdateRecipe(int userId, Recipe updatedRecipe)
+    {
+        var originalRecipe = await _context.Recipes.SingleOrDefaultAsync(r => r.RecipeId == updatedRecipe.RecipeId && r.UserId == userId);
         if (originalRecipe != null)
         {
             originalRecipe.RecipeName = updatedRecipe.RecipeName;
@@ -51,8 +52,19 @@ public class EFRecipeRepository : IRecipeRepository
             originalRecipe.RecipeInstructions = updatedRecipe.RecipeInstructions;
             originalRecipe.RecipeImgUrl = updatedRecipe.RecipeImgUrl;
             originalRecipe.UserId = updatedRecipe.UserId;
+
             await _context.SaveChangesAsync();
         }
         return originalRecipe;
+    }
+
+    public async Task DeleteRecipe(int userId, int recipeId)
+    {
+        var recipe = await _context.Recipes.SingleOrDefaultAsync(r => r.RecipeId == recipeId && r.UserId == userId);
+        if (recipe != null)
+        {
+            _context.Recipes.Remove(recipe);
+            await _context.SaveChangesAsync();
+        }
     }
 }
