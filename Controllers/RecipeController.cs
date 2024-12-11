@@ -88,15 +88,15 @@ namespace feastly_api.Controllers
         [HttpPost]
         public async Task<ActionResult<Recipe>> CreateRecipe([FromBody] Recipe newRecipe)
         {
-            if (!ModelState.IsValid || newRecipe == null)
-            {
-                return BadRequest();
-            }
-
             var userId = GetUserIdFromToken();
             if (userId == null)
             {
                 return Unauthorized();
+            }
+
+            if (!ModelState.IsValid || newRecipe == null)
+            {
+                return BadRequest();
             }
 
             newRecipe.UserId = userId.Value;
@@ -110,15 +110,15 @@ namespace feastly_api.Controllers
         [Route("{recipeId:int}")]
         public async Task<ActionResult<Recipe>> UpdateRecipe([FromBody] Recipe updatedRecipe, int recipeId)
         {
-            if (!ModelState.IsValid || updatedRecipe == null || updatedRecipe.RecipeId != recipeId)
-            {
-                return BadRequest();
-            }
-
             var userId = GetUserIdFromToken();
             if (userId == null)
             {
                 return Unauthorized();
+            }
+
+            if (!ModelState.IsValid || updatedRecipe == null || updatedRecipe.RecipeId != recipeId)
+            {
+                return BadRequest();
             }
 
             updatedRecipe.UserId = userId.Value;
