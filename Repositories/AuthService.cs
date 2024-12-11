@@ -59,12 +59,13 @@ public class AuthService : IAuthService
         {
             new Claim(JwtRegisteredClaimNames.Sub, user.UserId.ToString()),
             new Claim(JwtRegisteredClaimNames.Email, user.Email ?? ""),
+             new Claim("UserId", user.UserId.ToString()), // added UserId claim
             new Claim(JwtRegisteredClaimNames.Name, user.Name ?? "")
         };
 
         var jwt = new JwtSecurityToken(
             claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(5),
+            expires: DateTime.UtcNow.AddMinutes(30), // increased time
             signingCredentials: signingCredentials);
 
         var encodedJwt = new JwtSecurityTokenHandler().WriteToken(jwt);
