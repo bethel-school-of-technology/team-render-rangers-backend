@@ -67,4 +67,11 @@ public class EFRecipeRepository : IRecipeRepository
             await _context.SaveChangesAsync();
         }
     }
+
+    public async Task<IEnumerable<Recipe>> SearchRecipes(string query)
+    {
+        return await _context.Recipes
+        .Where(r => r.RecipeName.ToLower().Contains(query) || r.RecipeIngredients.ToLower().Contains(query) || r.RecipeCategory.ToLower().Contains(query))
+        .ToListAsync();
+    }
 }

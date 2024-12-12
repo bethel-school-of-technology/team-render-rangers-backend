@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace feastly_api.Controllers
 {
@@ -168,6 +169,15 @@ namespace feastly_api.Controllers
 
             await _recipeRepository.DeleteRecipe(userId.Value, recipeId);
             return NoContent();
+        }
+
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<Recipe>>> SearchRecipes([FromQuery] string q)
+        {
+            if (string.IsNullOrWhiteSpace(q)) return BadRequest("Search query cannot be empty.");
+
+            var recipes = await _recipeRepository.SearchRecipes(q);
+            return Ok(recipes);
         }
     }
 }
