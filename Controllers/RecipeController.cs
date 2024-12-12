@@ -121,7 +121,13 @@ namespace feastly_api.Controllers
                 return BadRequest();
             }
 
-            updatedRecipe.UserId = userId.Value;
+            var existingRecipe = await _recipeRepository.GetRecipe(recipeId);
+
+            if (existingRecipe.UserId != userId)
+            {
+                return Forbid();
+            }
+            // updatedRecipe.UserId = userId.Value;
 
             var recipeUpdate = await _recipeRepository.UpdateRecipe(userId.Value, updatedRecipe);
             if (recipeUpdate == null)

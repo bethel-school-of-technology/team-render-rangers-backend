@@ -1,3 +1,4 @@
+using System.Dynamic;
 using feastly_api.Models;
 using feastly_api.Repositories;
 using Microsoft.AspNetCore.Mvc;
@@ -33,20 +34,20 @@ public class AuthController : ControllerBase
 
     [HttpGet]
     [Route("login")]
-    public ActionResult<string> SignIn(string email, string password)
+    public ActionResult<ExpandoObject> SignIn(string email, string password)
     {
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
         {
             return BadRequest();
         }
 
-        var token = _authService.SignIn(email, password);
+        var userWithToken = _authService.SignIn(email, password);
 
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return Unauthorized();
-        }
+        //if (userWithToken)
+        //{
+        //    return Unauthorized();
+        //}
 
-        return Ok(token);
+        return Ok(userWithToken);
     }
 }

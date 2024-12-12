@@ -600,7 +600,7 @@ namespace feastly_api.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("feastly_api.Models.Recipe", b =>

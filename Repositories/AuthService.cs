@@ -6,6 +6,7 @@ using System.Security.Claims;
 using bcrypt = BCrypt.Net.BCrypt;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
+using System.Dynamic;
 
 namespace feastly_api.Repositories;
 
@@ -30,7 +31,7 @@ public class AuthService : IAuthService
         return user;
     }
 
-    public string SignIn(string email, string password)
+    public ExpandoObject SignIn(string email, string password)
     {
         var user = _context.Users.SingleOrDefault(x => x.Email == email);
         var verified = false;
@@ -42,10 +43,19 @@ public class AuthService : IAuthService
 
         if (user == null || !verified)
         {
-            return String.Empty;
+            return new ExpandoObject();
         }
 
-        return BuildToken(user);
+        // user.token = BuildToken(user);
+
+        dynamic userWithToken = new ExpandoObject();
+        userWithToken.token = BuildToken(user);
+        userWithToken.UserId = user.UserId;
+        userWithToken.Email = user.Email;
+        userWithToken.Name = user.Name;
+
+
+        return userWithToken;
     }
 
     private string BuildToken(User user)
