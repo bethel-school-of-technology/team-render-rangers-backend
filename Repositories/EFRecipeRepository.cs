@@ -16,7 +16,9 @@ public class EFRecipeRepository : IRecipeRepository
 
     public async Task<IEnumerable<Recipe>> GetAllRecipes()
     {
-        return await _context.Recipes.ToListAsync();
+        return await _context.Recipes
+        .OrderByDescending(r => r.UserId)
+        .ToListAsync();
     }
 
     public async Task<Recipe?> GetRecipe(int recipeId)
