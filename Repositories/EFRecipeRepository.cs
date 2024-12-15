@@ -17,7 +17,7 @@ public class EFRecipeRepository : IRecipeRepository
     public async Task<IEnumerable<Recipe>> GetAllRecipes()
     {
         return await _context.Recipes
-        .OrderByDescending(r => r.UserId)
+        .OrderByDescending(r => r.RecipeId)
         .ToListAsync();
     }
 
@@ -53,7 +53,6 @@ public class EFRecipeRepository : IRecipeRepository
             originalRecipe.RecipeIngredients = updatedRecipe.RecipeIngredients;
             originalRecipe.RecipeInstructions = updatedRecipe.RecipeInstructions;
             originalRecipe.RecipeImgUrl = updatedRecipe.RecipeImgUrl;
-            originalRecipe.UserId = updatedRecipe.UserId;
 
             await _context.SaveChangesAsync();
         }
